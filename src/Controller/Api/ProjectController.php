@@ -4,21 +4,28 @@ namespace App\Controller\Api;
 
 use App\Entity\Project;
 use App\Repository\ProjectRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class ProjectController extends AbstractController
 {
     #[Route('api/projects', name: 'project_index', methods: ['GET'])]
-    public function index(ProjectRepository $projectRepository): JsonResponse
+    public function list(ProjectRepository $projectRepository, Request $request): JsonResponse
     {
-        $projects = $projectRepository->findAll();
+        $last = (int)($request->query->get('last'));
+
+        $projects = $projectRepository->filter($last);
+
+        $count = $projectRepository->countProjects();
 
         return $this->json([
-            'projects' => $projects
+            'projects' => $projects,
+            'count' => $count
         ]);
     }
 
@@ -64,18 +71,34 @@ class ProjectController extends AbstractController
         return $this->json('Updated a project successfully with id ' . $project->getId());
     }
 
-    #[Route('api/project/{id}', name: 'project_delete', methods: ['DELETE'])]
-    public function delete(ProjectRepository $projectRepository, EntityManagerInterface $entityManager, int $id): JsonResponse
+    #[Route('api/project/delete', name: 'project_delete', methods: ['DELETE'])]
+    public function delete(ProjectRepository $projectRepository, EntityManagerInterface $entityManager): JsonResponse
     {
-        $project = $projectRepository->find($id);
-
-        if (!$project) {
-            return $this->json('No project found for id ' . $id, 404);
-        }
+        $project = $projectRepository->findOneBy([], ['id' => 'DESC']);
 
         $entityManager->remove($project);
         $entityManager->flush();
 
-        return $this->json('Deleted a project successfully with id ' . $project->getId());
+        return $this->json('Deleted a project successfully');
+    }
+
+    #[Route('/react', name: 'app_test')]
+    public function react(): Response
+    {
+        $date = new \DateTime('now');
+
+        return $this->render('api/project/index.html.twig', [
+            'date' => $date
+        ]);
+    }
+
+    #[Route('/api/queries', name: 'app_queries')]
+    public function test(ProjectRepository $projectRepository): Response
+    {
+        $projects = $projectRepository->queryTest();
+
+        return $this->json([
+            'projects' => $projects
+        ]);
     }
 }

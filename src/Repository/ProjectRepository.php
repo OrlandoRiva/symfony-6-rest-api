@@ -39,6 +39,54 @@ class ProjectRepository extends ServiceEntityRepository
         }
     }
 
+    /**
+     * @param int $last
+     * @return Project[]
+     */
+    public function filter(?int $last = null): array
+    {
+        $queryBuilder = $this->createQueryBuilder('project');
+        $queryBuilder->orderBy('project.id', 'DESC');
+
+        if($last) {
+            $queryBuilder->setMaxResults($last);
+        }
+
+        return $queryBuilder
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function countProjects()
+    {
+        return $this->createQueryBuilder('project')
+            ->select('COUNT(project.id)')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    public function queryTest()
+    {
+        $queryBuilder = $this->createQueryBuilder('project');
+
+        $queryBuilder
+            ->orderBy('project.id', 'DESC')
+            ->where('project.id = 1');
+
+        return $queryBuilder
+            ->getQuery()
+            ->getResult();
+    }
+
+//    public function teste()
+//    {
+//        $query = $this->getEntityManager()->createQuery(
+//            'SELECT COUNT(p.id) FROM App\Entity\Project p'
+//        );
+//
+//        return $query->getSingleScalarResult();
+//    }
+
 //    /**
 //     * @return Project[] Returns an array of Project objects
 //     */
