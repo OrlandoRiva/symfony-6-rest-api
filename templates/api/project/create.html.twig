@@ -1,3 +1,15 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Create Project{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h1 class="text-danger">Page Create Loaded: {{ date.format('Y-m-d H:i:s') }}</h1>
+        <div class="mt-5">
+            <a href="{{ path('project_list_react') }}" role="button" class="btn btn-primary">
+                Projects
+            </a>
+        </div>
+        <div {{ react_component('CreateComponent') }}></div>
+    </div>
+{% endblock %}

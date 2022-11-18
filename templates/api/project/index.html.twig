@@ -3,22 +3,8 @@
 {% block title %}List Projects{% endblock %}
 
 {% block body %}
-    <style>
-        .example-wrapper {
-            margin: 1em auto;
-            max-width: 800px;
-            width: 95%;
-            font: 18px/1.5 sans-serif;
-        }
-
-        .example-wrapper code {
-            background: #F5F5F5;
-            padding: 2px 6px;
-        }
-    </style>
-
     <div class="container">
-        <h1 class="text-danger">Page Loaded: {{ date.format('Y-m-d H:i:s') }}</h1>
+        <h1 class="text-danger">Page List Loaded: {{ date.format('Y-m-d H:i:s') }}</h1>
         <div class="mt-5">
             <a href="{{ path('project_list_react') }}" role="button" class="btn btn-primary">
                 Projects
@@ -27,6 +13,6 @@
                 Create Project
             </a>
         </div>
-        <div {{ react_component('MyComponent') }}></div>
+        <div {{ react_component('ListComponent') }}></div>
     </div>
 {% endblock %}

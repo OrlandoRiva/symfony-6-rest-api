@@ -4,6 +4,7 @@ namespace App\Controller\Api;
 
 use App\Entity\Project;
 use App\Repository\ProjectRepository;
+use App\Repository\ThemeRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use JMS\Serializer\SerializationContext;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -34,11 +35,12 @@ class ProjectController extends AbstractController
     }
 
     #[Route('api/project/create', name: 'project_create', methods: ['POST'])]
-    public function create(EntityManagerInterface $entityManager, Request $request): JsonResponse
+    public function create(EntityManagerInterface $entityManager, Request $request, ThemeRepository $themeRepository): JsonResponse
     {
         $project = new Project();
         $project->setName($request->request->get('name'));
         $project->setDescription($request->request->get('description'));
+        $project->setTheme($themeRepository->find(1));
 
         $entityManager->persist($project);
         $entityManager->flush();
@@ -99,7 +101,11 @@ class ProjectController extends AbstractController
     #[Route('/create', name: 'project_create_page')]
     public function createPage(): Response
     {
-        return $this->render('api/project/create.html.twig');
+        $date = new \DateTime('now');
+
+        return $this->render('api/project/create.html.twig', [
+            'date' => $date
+        ]);
     }
 
     #[Route('/api/queries', name: 'app_queries')]

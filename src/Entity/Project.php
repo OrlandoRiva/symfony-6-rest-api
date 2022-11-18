@@ -6,6 +6,8 @@ use App\Repository\ProjectRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
+use App\Validator as CustomValidator;
 
 #[ORM\Entity(repositoryClass: ProjectRepository::class)]
 class Project
@@ -18,10 +20,13 @@ class Project
 
     #[ORM\Column(length: 255)]
     #[Groups(['list', 'test'])]
+    #[CustomValidator\NameValidation]
     private ?string $name = null;
 
     #[ORM\Column(type: Types::TEXT)]
     #[Groups(['list', 'test'])]
+    #[Assert\NotBlank]
+    #[Assert\Length(min:3)]
     private ?string $description = null;
 
     #[ORM\ManyToOne(inversedBy: 'projects')]
