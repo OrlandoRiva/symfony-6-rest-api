@@ -15,7 +15,7 @@ use JMS\Serializer\SerializerInterface;
 
 class ProjectController extends AbstractController
 {
-    #[Route('api/projects', name: 'project_index', methods: ['GET'])]
+    #[Route('api/projects', name: 'project_list', methods: ['GET'])]
     public function list(ProjectRepository $projectRepository, Request $request, SerializerInterface $serializer): JsonResponse
     {
         $last = (int)($request->query->get('last'));
@@ -86,7 +86,7 @@ class ProjectController extends AbstractController
         return $this->json('Deleted a project successfully');
     }
 
-    #[Route('/react', name: 'app_test')]
+    #[Route('/react', name: 'project_list_react')]
     public function react(): Response
     {
         $date = new \DateTime('now');
@@ -94,6 +94,12 @@ class ProjectController extends AbstractController
         return $this->render('api/project/index.html.twig', [
             'date' => $date
         ]);
+    }
+
+    #[Route('/create', name: 'project_create_page')]
+    public function createPage(): Response
+    {
+        return $this->render('api/project/create.html.twig');
     }
 
     #[Route('/api/queries', name: 'app_queries')]

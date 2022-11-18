@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello ProjectController!{% endblock %}
+{% block title %}List Projects{% endblock %}
 
 {% block body %}
     <style>
@@ -19,6 +19,14 @@
 
     <div class="container">
         <h1 class="text-danger">Page Loaded: {{ date.format('Y-m-d H:i:s') }}</h1>
+        <div class="mt-5">
+            <a href="{{ path('project_list_react') }}" role="button" class="btn btn-primary">
+                Projects
+            </a>
+            <a href="{{ path('project_create_page') }}" role="button" class="btn btn-success">
+                Create Project
+            </a>
+        </div>
         <div {{ react_component('MyComponent') }}></div>
     </div>
 {% endblock %}
