@@ -42,6 +42,7 @@ export default function () {
                     <div key={project.id}>
                         <h1>{project.name} {project.id}</h1>
                         <p>{project.description}</p>
+                        <span><b>Theme:</b> {project.theme.name}</span>
                     </div>
                 ))}
                 <br/>

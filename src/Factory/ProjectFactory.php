@@ -41,6 +41,7 @@ final class ProjectFactory extends ModelFactory
         return [
             'name' => self::faker()->word(),
             'description' => self::faker()->paragraph(),
+            'theme' => ThemeFactory::random(),
         ];
     }
 

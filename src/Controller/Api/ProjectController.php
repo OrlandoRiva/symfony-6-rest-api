@@ -4,24 +4,28 @@ namespace App\Controller\Api;
 
 use App\Entity\Project;
 use App\Repository\ProjectRepository;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
+use JMS\Serializer\SerializationContext;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use JMS\Serializer\SerializerInterface;
 
 class ProjectController extends AbstractController
 {
     #[Route('api/projects', name: 'project_index', methods: ['GET'])]
-    public function list(ProjectRepository $projectRepository, Request $request): JsonResponse
+    public function list(ProjectRepository $projectRepository, Request $request, SerializerInterface $serializer): JsonResponse
     {
         $last = (int)($request->query->get('last'));
 
         $projects = $projectRepository->filter($last);
 
         $count = $projectRepository->countProjects();
+
+        $projects = $serializer->serialize($projects, 'json', SerializationContext::create()->setGroups(array('list')));
+        $projects = $serializer->deserialize($projects, 'array', 'json');
 
         return $this->json([
             'projects' => $projects,
@@ -93,9 +97,12 @@ class ProjectController extends AbstractController
     }
 
     #[Route('/api/queries', name: 'app_queries')]
-    public function test(ProjectRepository $projectRepository): Response
+    public function test(ProjectRepository $projectRepository, SerializerInterface $serializer): JsonResponse
     {
         $projects = $projectRepository->queryTest();
+
+        $projects = $serializer->serialize($projects, 'json', SerializationContext::create()->setGroups(array('test')));
+        $projects = $serializer->deserialize($projects, 'array', 'json');
 
         return $this->json([
             'projects' => $projects

@@ -40,7 +40,7 @@ class ProjectRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param int $last
+     * @param int|null $last
      * @return Project[]
      */
     public function filter(?int $last = null): array
@@ -48,7 +48,7 @@ class ProjectRepository extends ServiceEntityRepository
         $queryBuilder = $this->createQueryBuilder('project');
         $queryBuilder->orderBy('project.id', 'DESC');
 
-        if($last) {
+        if ($last) {
             $queryBuilder->setMaxResults($last);
         }
 
@@ -71,7 +71,7 @@ class ProjectRepository extends ServiceEntityRepository
 
         $queryBuilder
             ->orderBy('project.id', 'DESC')
-            ->where('project.id = 1');
+            ->where('project.theme = 1');
 
         return $queryBuilder
             ->getQuery()
