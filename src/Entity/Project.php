@@ -32,6 +32,7 @@ class Project
     #[ORM\ManyToOne(inversedBy: 'projects')]
     #[ORM\JoinColumn(nullable: false)]
     #[Groups(['list'])]
+    #[Assert\NotBlank]
     private ?Theme $theme = null;
 
     public function getId(): ?int

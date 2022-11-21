@@ -42,7 +42,7 @@ class ProjectController extends AbstractController
         $project = new Project();
         $project->setName($request->request->get('name'));
         $project->setDescription($request->request->get('description'));
-        $project->setTheme($themeRepository->find(1));
+        $project->setTheme($themeRepository->find($request->request->get('theme')));
 
         //Validation
         $validation = new ProjectValidator();
@@ -116,6 +116,19 @@ class ProjectController extends AbstractController
 
         return $this->render('api/project/create.html.twig', [
             'date' => $date
+        ]);
+    }
+
+    #[Route('api/themes', name: 'get_themes', methods: ['GET'])]
+    public function getThemes(ThemeRepository $themeRepository, SerializerInterface $serializer): JsonResponse
+    {
+        $themes = $themeRepository->findAll();
+
+        $themes = $serializer->serialize($themes, 'json', SerializationContext::create());
+        $themes = $serializer->deserialize($themes, 'array', 'json');
+
+        return $this->json([
+            'themes' => $themes
         ]);
     }
 

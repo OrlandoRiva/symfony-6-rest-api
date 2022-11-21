@@ -18,7 +18,7 @@ export default function () {
                 setLoading(false);
             })
             .catch((err) => {
-                // console.log(err);
+                console.log(err);
             });
     }, [last, remove]);
 

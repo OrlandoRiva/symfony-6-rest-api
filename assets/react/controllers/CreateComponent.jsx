@@ -1,19 +1,37 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import axios from "axios";
-import {Alert, Button, Grid, TextField, Typography} from "@mui/material";
+import {Alert, Button, FormControl, Grid, Select, TextField, Typography, InputLabel, MenuItem} from "@mui/material";
 
 export default function () {
+    const [themes, setThemes] = useState([]);
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
+    const [theme, setTheme] = useState('');
     const [error, setError] = useState('');
 
+    //Get Themes
+    useEffect(() => {
+        axios
+            .get('https://127.0.0.1:8000/api/themes')
+            .then((res) => {
+                console.log(res.data);
+                setThemes(res.data.themes);
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    }, []);
+    //
+
+    //Post Project
     const handleSubmit = (e) => {
         e.preventDefault();
 
         let formData = new FormData()
 
-        formData.append("name", name);
-        formData.append("description", description);
+        formData.append('name', name);
+        formData.append('description', description);
+        formData.append('theme', theme);
 
         axios
             .post('https://127.0.0.1:8000/api/project/create', formData)
@@ -29,6 +47,13 @@ export default function () {
                 console.log(err);
             });
     }
+    //
+
+    //Get Theme Value
+    const handleChange = (event) => {
+        setTheme(event.target.value);
+    };
+    //
 
     return (
         <>
@@ -72,6 +97,25 @@ export default function () {
                                 <Alert variant="filled" severity="error">{error.descriptionError}</Alert>
                             </Grid>
                         )}
+                    </Grid>
+                    <Grid item xs={12} pt={5}>
+                        <FormControl fullWidth>
+                            <InputLabel id="demo-simple-select-label">Theme</InputLabel>
+                            <Select
+                                labelId="demo-simple-select-label"
+                                id="demo-simple-select"
+                                name="theme"
+                                defaultValue=""
+                                label="Theme"
+                                onChange={handleChange}
+                            >
+                                {themes.map((theme) => (
+                                    <MenuItem key={theme.id} value={theme.id}>
+                                        {theme.name}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
                     </Grid>
                     <Grid item xs={12} pt={5}>
                         <Button type="submit" value="submit" variant="contained" color="success">
