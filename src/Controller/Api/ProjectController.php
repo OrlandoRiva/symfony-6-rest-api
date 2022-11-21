@@ -66,7 +66,7 @@ class ProjectController extends AbstractController
         $entityManager->persist($project);
         $entityManager->flush();
 
-        return $this->json('Created new project successfully with id ' . $project->getId());
+        return $this->json('Created new project successfully with id ' . $project->getId(), 201);
     }
 
     #[Route('api/project/{id}', name: 'project_show', methods: ['GET'])]
@@ -95,7 +95,7 @@ class ProjectController extends AbstractController
 
         $entityManager->flush();
 
-        return $this->json('Updated a project successfully with id ' . $project->getId());
+        return $this->json('Updated a project successfully with id ' . $project->getId(), 201);
     }
 
     #[Route('api/project/delete', name: 'project_delete', methods: ['DELETE'])]
