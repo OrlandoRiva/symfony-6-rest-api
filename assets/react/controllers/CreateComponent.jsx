@@ -18,8 +18,8 @@ export default function () {
         axios
             .post('https://127.0.0.1:8000/api/project/create', formData)
             .then((res) => {
-                console.log(res.data);
                 if (res.status === 201) {
+                    console.log(res.data);
                     console.log(res.status);
                     window.location = '/react';
                 }

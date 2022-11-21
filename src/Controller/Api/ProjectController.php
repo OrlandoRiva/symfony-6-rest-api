@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use JMS\Serializer\SerializerInterface;
+use App\Validator\ProjectValidator;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class ProjectController extends AbstractController
@@ -43,25 +44,14 @@ class ProjectController extends AbstractController
         $project->setDescription($request->request->get('description'));
         $project->setTheme($themeRepository->find(1));
 
-        $nameError = $validator->validateProperty($project, 'name');
-        $descriptionError = $validator->validateProperty($project, 'description');
+        //Validation
+        $validation = new ProjectValidator();
+        $validation->validation($validator, $project);
 
-        $errors = [];
-
-        if(count($nameError) > 0) {
-            foreach ($nameError as $error) {
-                $errors['nameError'] = $error->getMessage();
-            }
+        if ($validation->errors) {
+            return $this->json($validation->errors);
         }
-        if(count($descriptionError) > 0) {
-            foreach ($descriptionError as $error) {
-                $errors['descriptionError'] = $error->getMessage();
-            }
-        }
-
-        if($errors) {
-            return $this->json($errors);
-        }
+        //
 
         $entityManager->persist($project);
         $entityManager->flush();
