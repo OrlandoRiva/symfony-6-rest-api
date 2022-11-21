@@ -1,10 +1,11 @@
 import React, {useState} from 'react';
 import axios from "axios";
-import {Button, Grid, TextField, Typography} from "@mui/material";
+import {Alert, Button, Grid, TextField, Typography} from "@mui/material";
 
 export default function () {
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
+    const [error, setError] = useState('');
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -18,6 +19,7 @@ export default function () {
             .post('https://127.0.0.1:8000/api/project/create', formData)
             .then((res) => {
                 console.log(res.data);
+                setError(res.data);
             })
             .catch((err) => {
                 console.log(err);
@@ -26,7 +28,7 @@ export default function () {
 
     return (
         <>
-            <Grid container-fluid>
+            <Grid className="container-fluid">
                 <Grid item xs={12} pt={5}>
                     <Typography variant="h6" className="title">
                         Create New Project
@@ -44,6 +46,11 @@ export default function () {
                             value={name}
                             onChange={(e) => setName(e.target.value)}
                         />
+                        {error.nameError && (
+                            <Grid item xs={12} pt={1}>
+                                <Alert variant="filled" severity="error">{error.nameError}</Alert>
+                            </Grid>
+                        )}
                     </Grid>
                     <Grid item xs={12} pt={5}>
                         <TextField
@@ -56,6 +63,11 @@ export default function () {
                             value={description}
                             onChange={(e) => setDescription(e.target.value)}
                         />
+                        {error.descriptionError && (
+                            <Grid item xs={12} pt={1}>
+                                <Alert variant="filled" severity="error">{error.descriptionError}</Alert>
+                            </Grid>
+                        )}
                     </Grid>
                     <Grid item xs={12} pt={5}>
                         <Button type="submit" value="submit" variant="contained" color="success">

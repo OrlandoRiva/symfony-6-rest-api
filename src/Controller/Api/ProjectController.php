@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use JMS\Serializer\SerializerInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class ProjectController extends AbstractController
 {
@@ -35,12 +36,32 @@ class ProjectController extends AbstractController
     }
 
     #[Route('api/project/create', name: 'project_create', methods: ['POST'])]
-    public function create(EntityManagerInterface $entityManager, Request $request, ThemeRepository $themeRepository): JsonResponse
+    public function create(EntityManagerInterface $entityManager, Request $request, ThemeRepository $themeRepository, ValidatorInterface $validator): JsonResponse
     {
         $project = new Project();
         $project->setName($request->request->get('name'));
         $project->setDescription($request->request->get('description'));
         $project->setTheme($themeRepository->find(1));
+
+        $nameError = $validator->validateProperty($project, 'name');
+        $descriptionError = $validator->validateProperty($project, 'description');
+
+        $errors = [];
+
+        if(count($nameError) > 0) {
+            foreach ($nameError as $error) {
+                $errors['nameError'] = $error->getMessage();
+            }
+        }
+        if(count($descriptionError) > 0) {
+            foreach ($descriptionError as $error) {
+                $errors['descriptionError'] = $error->getMessage();
+            }
+        }
+
+        if($errors) {
+            return $this->json($errors);
+        }
 
         $entityManager->persist($project);
         $entityManager->flush();

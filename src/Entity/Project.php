@@ -7,7 +7,6 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
-use App\Validator as CustomValidator;
 
 #[ORM\Entity(repositoryClass: ProjectRepository::class)]
 class Project
@@ -20,7 +19,8 @@ class Project
 
     #[ORM\Column(length: 255)]
     #[Groups(['list', 'test'])]
-    #[CustomValidator\NameValidation]
+    #[Assert\NotBlank]
+    #[Assert\Regex('/^[a-z]+$/i', message: 'Must use only letters.')]
     private ?string $name = null;
 
     #[ORM\Column(type: Types::TEXT)]
