@@ -12,6 +12,7 @@ class ProjectValidator
     {
         $nameError = $validator->validateProperty($project, 'name');
         $descriptionError = $validator->validateProperty($project, 'description');
+        $themeError = $validator->validateProperty($project, 'theme');
 
         if (count($nameError) > 0) {
             foreach ($nameError as $error) {
@@ -22,6 +23,12 @@ class ProjectValidator
         if (count($descriptionError) > 0) {
             foreach ($descriptionError as $error) {
                 $this->errors['descriptionError'] = $error->getMessage();
+            }
+        }
+
+        if (count($themeError) > 0) {
+            foreach ($themeError as $error) {
+                $this->errors['themeError'] = $error->getMessage();
             }
         }
 

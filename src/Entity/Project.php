@@ -20,7 +20,7 @@ class Project
     #[ORM\Column(length: 255)]
     #[Groups(['list', 'test'])]
     #[Assert\NotBlank]
-    #[Assert\Regex('/^[a-z]+$/i', message: 'Must use only letters.')]
+    #[Assert\Regex('/^[a-z\s]+$/i', message: 'Must use only letters.')]
     private ?string $name = null;
 
     #[ORM\Column(type: Types::TEXT)]

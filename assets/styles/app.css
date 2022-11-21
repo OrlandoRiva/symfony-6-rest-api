@@ -4,10 +4,18 @@
 @import '@fontsource/roboto/700.css';
 @import '~bootstrap';
 
-body {
-    background-color: lightgray;
+/* CSS */
+.title {
+    color: green !important;
 }
 
-.title {
-    color: green;
+.loading {
+    position: fixed !important;
+    top: 50% !important;
+    left: 50% !important;
+}
+
+.MuiTablePagination-displayedRows {
+    margin-top: inherit !important;
+    margin-bottom: inherit !important;
 }
