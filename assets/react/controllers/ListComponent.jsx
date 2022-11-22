@@ -91,9 +91,7 @@ const columns = [
     {field: "id"},
     {field: "name", headerName: "Name", minWidth: 130, flex: 1},
     {field: "description", headerName: "Description", minWidth: 130, flex: 1},
-    {
-        field: "theme", headerName: "Theme", minWidth: 130, flex: 1, valueGetter: (params) => {
+    {field: "theme", headerName: "Theme", minWidth: 130, flex: 1, valueGetter: (params) => {
             return params.row.theme.name;
-        }
-    }
+        }}
 ];

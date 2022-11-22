@@ -27,13 +27,15 @@ class ProjectController extends AbstractController
 
         $count = $projectRepository->countProjects();
 
-        $projects = $serializer->serialize($projects, 'json', SerializationContext::create()->setGroups(array('list')));
-        $projects = $serializer->deserialize($projects, 'array', 'json');
+//       $projects = $serializer->serialize($projects, 'json', SerializationContext::create()->setGroups(array('list')));
+//       $projects = $serializer->deserialize($projects, 'array', 'json');
 
-        return $this->json([
+        $json = $serializer->serialize([
             'projects' => $projects,
             'count' => $count
-        ]);
+        ], 'json', SerializationContext::create()->setGroups(array('list')));
+
+        return JsonResponse::fromJsonString($json);
     }
 
     #[Route('api/project/create', name: 'project_create', methods: ['POST'])]
@@ -124,12 +126,11 @@ class ProjectController extends AbstractController
     {
         $themes = $themeRepository->findAll();
 
-        $themes = $serializer->serialize($themes, 'json', SerializationContext::create());
-        $themes = $serializer->deserialize($themes, 'array', 'json');
-
-        return $this->json([
+        $json = $serializer->serialize([
             'themes' => $themes
-        ]);
+        ], 'json', SerializationContext::create()->setGroups(array('list')));
+
+        return JsonResponse::fromJsonString($json);
     }
 
     #[Route('/api/queries', name: 'app_queries')]
@@ -137,11 +138,10 @@ class ProjectController extends AbstractController
     {
         $projects = $projectRepository->queryTest();
 
-        $projects = $serializer->serialize($projects, 'json', SerializationContext::create()->setGroups(array('test')));
-        $projects = $serializer->deserialize($projects, 'array', 'json');
-
-        return $this->json([
+        $json = $serializer->serialize([
             'projects' => $projects
-        ]);
+        ], 'json', SerializationContext::create()->setGroups(array('list')));
+
+        return JsonResponse::fromJsonString($json);
     }
 }
